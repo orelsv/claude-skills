@@ -11,6 +11,7 @@ Custom **skills** and **slash commands** for [Claude Code](https://claude.com/cl
 | [lab-writeup](skills/lab-writeup/SKILL.md) | Document a finished lab/project: Obsidian note, LinkedIn post, summary |
 | [security-review](skills/security-review/SKILL.md) | Security audit of code and configs: OWASP, threat modeling, auth/secrets review |
 | [ui-ux-animation](skills/ui-ux-animation/SKILL.md) | UI/UX with animations: scroll effects, parallax, hover, micro-interactions |
+| [orel_cybersecurity_check](skills/orel_cybersecurity_check/SKILL.md) | Build apps securely by default + audit existing sites/apps (SQLi, secrets in git history, weak cookies, exposed .git/.env, GDPR). Drives the [oscan](https://github.com/orelsv/orel-cybersecurity-check) scanner |
 
 | Command | What it does |
 |---|---|
@@ -44,6 +45,11 @@ mkdir -p ~/.claude/skills && curl -sL https://github.com/orelsv/claude-skills/ar
 ```bash
 # ui-ux-animation
 mkdir -p ~/.claude/skills && curl -sL https://github.com/orelsv/claude-skills/archive/main.tar.gz | tar -xz --strip-components=2 -C ~/.claude/skills claude-skills-main/skills/ui-ux-animation
+```
+
+```bash
+# orel_cybersecurity_check  (the companion scanner lives in its own repo: github.com/orelsv/orel-cybersecurity-check)
+mkdir -p ~/.claude/skills && curl -sL https://github.com/orelsv/claude-skills/archive/main.tar.gz | tar -xz --strip-components=2 -C ~/.claude/skills claude-skills-main/skills/orel_cybersecurity_check
 ```
 
 How it works:
