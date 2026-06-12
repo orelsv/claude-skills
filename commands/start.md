@@ -1,46 +1,46 @@
 ---
-description: Почати сесію — завантажити останній snapshot, vault index і git-стан
+description: Start a session — load the latest snapshot, vault index, and git state
 ---
 
-# /start — відновити контекст сесії
+# /start — restore session context
 
-Завантаж збережений контекст (створений командою `/save`) і поясни користувачу де ми зупинились. Мова — українська, технічні терміни англійською.
+Load the saved context (created by the `/save` command) and explain to the user where we left off.
 
-Аргумент (опційно — назва проекту, частина назви snapshot-файлу або дата): $ARGUMENTS
+Argument (optional — project name, part of a snapshot filename, or a date): $ARGUMENTS
 
 ## 1. Vault index
 
-Прочитай `/Users/orel/vault_claude/wiki/index.md` — загальний контекст знань і проектів.
+Read `/Users/orel/vault_claude/wiki/index.md` — the overall knowledge and project context.
 
-## 2. Знайди потрібний snapshot
+## 2. Find the right snapshot
 
-Список snapshot-ів (новіші зверху):
+List snapshots (newest first):
 ```bash
 ls -t /Users/orel/vault_claude/logs/sessions/
 ```
 
-Вибір — строга прив'язка до поточної папки:
-- якщо заданий аргумент — знайди snapshot, що відповідає йому (по project-slug, даті чи часу)
-- інакше — найновіший snapshot САМЕ для поточного проекту (basename від cwd у назві файлу)
-- якщо для поточної папки snapshot-ів НЕМА — НЕ завантажуй чужий проект автоматично; покажи список доступних snapshot-ів і спитай користувача, який взяти (або почати з нуля)
+Selection — strictly bound to the current folder:
+- if an argument is given — find the snapshot matching it (by project slug, date, or time)
+- otherwise — the newest snapshot for EXACTLY the current project (basename of cwd in the filename)
+- if there are NO snapshots for the current folder — do NOT auto-load another project; show the list of available snapshots and ask the user which one to take (or start fresh)
 
-Якщо для папки є кілька snapshot-ів (паралельні сесії) — бери найновіший, але згадай, що є старіші, і що конкретний можна вибрати через `/start <дата_час>`.
+If the folder has several snapshots (parallel sessions) — take the newest, but mention that older ones exist and a specific one can be chosen via `/start <date_time>`.
 
-## 3. Прочитай контекст
+## 3. Read the context
 
-- знайдений snapshot повністю
-- останній daily log (`logs/YYYY-MM-DD.md`, найновіший)
-- якщо у snapshot згадані конкретні файли проекту чи wiki-нотатки — НЕ читай їх всі одразу; читай тільки коли дійде до роботи з ними (бережи контекст)
+- the found snapshot in full
+- the latest daily log (`logs/YYYY-MM-DD.md`, newest)
+- if the snapshot mentions specific project files or wiki notes — do NOT read them all upfront; read them only when the work actually touches them (preserve context)
 
-## 4. Git-стан
+## 4. Git state
 
-Якщо cwd — git-репозиторій: `git status` + `git log --oneline -5`. Порівняй з тим, що записано у snapshot (branch/commit) — якщо стан розійшовся, зазнач це.
+If cwd is a git repository: `git status` + `git log --oneline -5`. Compare with what the snapshot recorded (branch/commit) — if the state has diverged, note it.
 
-## 5. Підсумок для користувача
+## 5. Summary for the user
 
-Стисло і структуровано:
-- **Де зупинились** — 2-3 речення з snapshot
-- **Наступні кроки** — список `- [ ]` зі snapshot (плюс розбіжності git-стану, якщо є)
-- **Відкриті питання** — якщо були
+Brief and structured:
+- **Where we left off** — 2-3 sentences from the snapshot
+- **Next steps** — the `- [ ]` list from the snapshot (plus git divergences, if any)
+- **Open questions** — if there were any
 
-Заверши пропозицією: з якого кроку почати. НЕ починай виконувати кроки без підтвердження користувача.
+Finish by proposing which step to start with. Do NOT start executing steps without the user's confirmation.

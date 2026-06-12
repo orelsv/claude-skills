@@ -1,25 +1,25 @@
 # Claude Skills
 
-Мої кастомні **skills** і **slash-команди** для [Claude Code](https://claude.com/claude-code). Кожен skill — окрема папка, можна встановити тільки те, що потрібно.
+Custom **skills** and **slash commands** for [Claude Code](https://claude.com/claude-code). Each skill lives in its own folder — install only what you need.
 
-## Що всередині
+## What's inside
 
-| Skill | Для чого |
+| Skill | What it does |
 |---|---|
-| [app-architecture](skills/app-architecture/SKILL.md) | Дизайн архітектури додатків: tech stack, структура папок, діаграми, ADR |
-| [iac-azure-security](skills/iac-azure-security/SKILL.md) | Secure Terraform для Azure: NSG, Key Vault, RBAC, managed identity + сканування (tfsec, Checkov, Trivy) |
-| [lab-writeup](skills/lab-writeup/SKILL.md) | Документація завершеної лаби/проекту: Obsidian-нотатка, LinkedIn-пост, summary |
-| [security-review](skills/security-review/SKILL.md) | Security-аудит коду і конфігів: OWASP, threat modeling, auth/secrets review |
-| [ui-ux-animation](skills/ui-ux-animation/SKILL.md) | UI/UX з анімаціями: scroll effects, parallax, hover, micro-interactions |
+| [app-architecture](skills/app-architecture/SKILL.md) | Application architecture design: tech stack, folder structure, diagrams, ADRs |
+| [iac-azure-security](skills/iac-azure-security/SKILL.md) | Secure Terraform for Azure: NSG, Key Vault, RBAC, managed identity + scanning (tfsec, Checkov, Trivy) |
+| [lab-writeup](skills/lab-writeup/SKILL.md) | Document a finished lab/project: Obsidian note, LinkedIn post, summary |
+| [security-review](skills/security-review/SKILL.md) | Security audit of code and configs: OWASP, threat modeling, auth/secrets review |
+| [ui-ux-animation](skills/ui-ux-animation/SKILL.md) | UI/UX with animations: scroll effects, parallax, hover, micro-interactions |
 
-| Команда | Для чого |
+| Command | What it does |
 |---|---|
-| [/save](commands/save.md) | Зберегти контекст сесії — snapshot у Obsidian vault, daily log, git-стан |
-| [/start](commands/start.md) | Відновити контекст у новій сесії — завантажує останній snapshot |
+| [/save](commands/save.md) | Save session context — snapshot to an Obsidian vault, daily log, git state |
+| [/start](commands/start.md) | Restore context in a new session — loads the latest snapshot |
 
-## Встановлення skill-а (один рядок)
+## Install a skill (one line)
 
-Скопіюй команду потрібного skill-а — встановиться глобально для всіх проектів (`~/.claude/skills/`):
+Copy the command for the skill you want — it installs globally for all projects (`~/.claude/skills/`):
 
 ```bash
 # app-architecture
@@ -46,55 +46,55 @@ mkdir -p ~/.claude/skills && curl -sL https://github.com/orelsv/claude-skills/ar
 mkdir -p ~/.claude/skills && curl -sL https://github.com/orelsv/claude-skills/archive/main.tar.gz | tar -xz --strip-components=2 -C ~/.claude/skills claude-skills-main/skills/ui-ux-animation
 ```
 
-Як це працює:
+How it works:
 
 ```bash
-mkdir -p ~/.claude/skills \                      # створити папку skills, якщо нема
-&& curl -sL https://github.com/orelsv/claude-skills/archive/main.tar.gz \  # скачати repo як tar.gz
-| tar -xz --strip-components=2 \                 # розпакувати, відкинувши перші 2 рівні шляху
-  -C ~/.claude/skills \                          # ціль — глобальна папка skills
-  claude-skills-main/skills/<назва-skill>        # витягти тільки потрібний skill
+mkdir -p ~/.claude/skills \                      # create the skills folder if missing
+&& curl -sL https://github.com/orelsv/claude-skills/archive/main.tar.gz \  # download the repo as tar.gz
+| tar -xz --strip-components=2 \                 # extract, dropping the first 2 path levels
+  -C ~/.claude/skills \                          # target — the global skills folder
+  claude-skills-main/skills/<skill-name>         # extract only the skill you need
 ```
 
-> Тільки для одного проекту замість усіх: заміни `~/.claude/skills` на `.claude/skills` у корені проекту.
+> To install for a single project instead of globally: replace `~/.claude/skills` with `.claude/skills` in the project root.
 
-## Встановлення /save + /start (session workflow)
+## Install /save + /start (session workflow)
 
-Цикл `/save` → `/clear` → `/start`: зберігає стан сесії у Obsidian vault і відновлює його у новій сесії (контекст Claude Code обмежений, а snapshot переживає `/clear`).
+The `/save` → `/clear` → `/start` cycle: saves the session state into an Obsidian vault and restores it in a new session (the Claude Code context is limited, but a snapshot survives `/clear`).
 
 ```bash
-# створити папку команд, якщо нема
+# create the commands folder if missing
 mkdir -p ~/.claude/commands
-# скачати обидві команди
+# download both commands
 curl -sL https://raw.githubusercontent.com/orelsv/claude-skills/main/commands/save.md -o ~/.claude/commands/save.md
 curl -sL https://raw.githubusercontent.com/orelsv/claude-skills/main/commands/start.md -o ~/.claude/commands/start.md
 ```
 
-⚠️ **Після встановлення обовʼязково**: у обох файлах шлях до vault прописаний як `/Users/orel/vault_claude/` — заміни на свій:
+⚠️ **Required after install**: both files reference the vault path `/Users/orel/vault_claude/` — replace it with yours:
 
 ```bash
-# заміни ШЛЯХ_ДО_ТВОГО_VAULT на свій шлях (наприклад ~/my-vault)
-sed -i '' 's|/Users/orel/vault_claude|ШЛЯХ_ДО_ТВОГО_VAULT|g' ~/.claude/commands/save.md ~/.claude/commands/start.md
+# replace YOUR_VAULT_PATH with your own path (e.g. ~/my-vault)
+sed -i '' 's|/Users/orel/vault_claude|YOUR_VAULT_PATH|g' ~/.claude/commands/save.md ~/.claude/commands/start.md
 ```
 
-Команди очікують у vault структуру `logs/`, `logs/sessions/`, `wiki/index.md` — створи її або адаптуй файли під свою.
+The commands expect the vault to contain `logs/`, `logs/sessions/`, and `wiki/index.md` — create that structure or adapt the files to your own.
 
-## Встановити все одразу
+## Install everything at once
 
 ```bash
-# клонувати repo у тимчасову папку
+# clone the repo into a temp folder
 git clone --depth 1 https://github.com/orelsv/claude-skills.git /tmp/claude-skills
-# скопіювати всі skills глобально
+# copy all skills globally
 mkdir -p ~/.claude/skills && cp -r /tmp/claude-skills/skills/* ~/.claude/skills/
-# скопіювати команди /save і /start
+# copy the /save and /start commands
 mkdir -p ~/.claude/commands && cp /tmp/claude-skills/commands/*.md ~/.claude/commands/
-# прибрати тимчасову папку
+# remove the temp folder
 rm -rf /tmp/claude-skills
 ```
 
-## Skill vs команда — у чому різниця
+## Skill vs command — what's the difference
 
-- **Skill** (`skills/<name>/SKILL.md`) — Claude підхоплює сам, коли запит збігається з `description`; вручну: `/<name>`.
-- **Slash-команда** (`commands/<name>.md`) — запускається тільки вручну: `/save`, `/start`. Підтримує `$ARGUMENTS`.
+- **Skill** (`skills/<name>/SKILL.md`) — Claude picks it up automatically when the request matches its `description`; manually: `/<name>`.
+- **Slash command** (`commands/<name>.md`) — runs only manually: `/save`, `/start`. Supports `$ARGUMENTS`.
 
-Після встановлення перезапусти сесію Claude Code (або відкрий нову), щоб skill зʼявився у списку.
+After installing, restart your Claude Code session (or open a new one) so the skill shows up in the list.

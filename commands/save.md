@@ -1,90 +1,90 @@
 ---
-description: Зберегти контекст сесії — snapshot у vault, daily log, wiki, перевірка git
+description: Save session context — snapshot to vault, daily log, wiki, git check
 ---
 
-# /save — зберегти сесію перед закриттям
+# /save — save the session before closing
 
-Збережи поточний стан сесії, щоб після `/clear` (або у новій сесії) можна було відновити контекст через `/start`. Виконай ВСІ кроки по черзі.
+Save the current session state so the context can be restored with `/start` after `/clear` (or in a new session). Complete ALL steps in order.
 
-Мова — українська, технічні терміни англійською. Внутрішні посилання — wikilinks `[[...]]`, НЕ markdown-посилання. Правила vault: `/Users/orel/vault_claude/CLAUDE.md`.
+Internal links — wikilinks `[[...]]`, NOT markdown links. Vault conventions (if the file exists): `/Users/orel/vault_claude/CLAUDE.md`.
 
-Додаткова нотатка від користувача (може бути порожньо): $ARGUMENTS
+Extra note from the user (may be empty): $ARGUMENTS
 
 ## 1. Session snapshot → vault
 
-Створи файл `/Users/orel/vault_claude/logs/sessions/YYYY-MM-DD_HHMM_<project-slug>.md`:
-- дата/час — поточні (`date +%Y-%m-%d_%H%M`)
-- `<project-slug>` — назва папки поточного проекту (basename від cwd)
+Create the file `/Users/orel/vault_claude/logs/sessions/YYYY-MM-DD_HHMM_<project-slug>.md`:
+- date/time — current (`date +%Y-%m-%d_%H%M`)
+- `<project-slug>` — current project folder name (basename of cwd)
 
-Шаблон:
+Template:
 
 ```markdown
 ---
 tags: [session-snapshot]
 date: YYYY-MM-DD
 project: <project-slug>
-cwd: <повний шлях до проекту>
+cwd: <full path to the project>
 ---
 
-# Snapshot сесії — <project> — YYYY-MM-DD HH:MM
+# Session snapshot — <project> — YYYY-MM-DD HH:MM
 
-## Контекст
-- Над чим працювали (2-3 речення, зрозумілі людині яка нічого не пам'ятає)
-- Git: branch + останній commit (якщо це git-репозиторій)
+## Context
+- What we worked on (2-3 sentences, clear to someone who remembers nothing)
+- Git: branch + latest commit (if this is a git repository)
 
-## Що зробили
-- (конкретні результати цієї сесії, не процес)
+## What we did
+- (concrete results of this session, not the process)
 
-## Файли (створені / змінені)
-- `шлях/до/файлу` — що саме і навіщо
+## Files (created / modified)
+- `path/to/file` — what exactly and why
 
-## Рішення і чому
-- (важливі рішення з обґрунтуванням — щоб не передумувати заново)
+## Decisions and why
+- (important decisions with reasoning — so they don't get re-litigated)
 
-## Граблі / Уроки
-- (що пішло не так і як вирішили; якщо нічого — пропусти секцію)
+## Pitfalls / Lessons
+- (what went wrong and how it was solved; if nothing — drop the section)
 
-## Відкриті питання
-- (що лишилось незрозумілим / нерешеним)
+## Open questions
+- (what remains unclear / unresolved)
 
-## Наступні кроки
-- [ ] (конкретні, виконувані пункти — з них почнеться наступна сесія)
+## Next steps
+- [ ] (concrete, actionable items — the next session starts from these)
 
-## Як відновити середовище
+## How to restore the environment
 ```bash
-# команди для запуску проекту/оточення, якщо потрібні
+# commands to start the project/environment, if needed
 ```
 
-## Пов'язані теми
+## Related topics
 - [[../../wiki/...|...]]
 ```
 
-Заповнюй чесно по фактах сесії. Порожні секції видаляй, не залишай заглушки.
+Fill it in honestly based on the facts of the session. Delete empty sections, don't leave placeholders.
 
 ## 2. Daily log
 
-Онови `/Users/orel/vault_claude/logs/YYYY-MM-DD.md` (якщо нема — створи за `logs/TEMPLATE.md`): додай що вивчили, команди варті запам'ятовування, питання, пункти "Наступного разу". Не дублюй весь snapshot — лише навчальну вижимку.
+Update `/Users/orel/vault_claude/logs/YYYY-MM-DD.md` (if missing — create from `logs/TEMPLATE.md` if it exists): add what was learned, commands worth remembering, questions, "Next time" items. Don't duplicate the whole snapshot — only the learning digest.
 
-## 3. Wiki (тільки якщо була значуща робота)
+## 3. Wiki (only if there was significant work)
 
-Якщо в сесії був новий концепт, проект або суттєвий прогрес існуючого проекту:
-- створи/онови нотатку у відповідній `wiki/<категорія>/` або `wiki/projects/`
-- додай зворотні посилання `[[...]]`
-- онови `wiki/index.md` (включно з датою "Останнє оновлення")
+If the session included a new concept, a new project, or substantial progress on an existing one:
+- create/update a note in the matching `wiki/<category>/` or `wiki/projects/`
+- add backlinks `[[...]]`
+- update `wiki/index.md` (including the "Last updated" date)
 
-Якщо це була дрібна/технічна сесія — пропусти цей крок і скажи чому.
+If it was a minor/technical session — skip this step and say why.
 
 ## 4. Git
 
-Якщо cwd — git-репозиторій: виконай `git status` і повідом про незакомічені зміни. НЕ комітити без явного дозволу користувача. Нагадай про `.gitignore`, якщо серед змінених файлів є щось схоже на secrets (.env, *.key, credentials).
+If cwd is a git repository: run `git status` and report uncommitted changes. Do NOT commit without the user's explicit permission. Remind about `.gitignore` if any changed files look like secrets (.env, *.key, credentials).
 
-## 5. Перевірка безпеки
+## 5. Security check
 
-Перед записом перевір, що у snapshot та логи НЕ потрапили credentials, API keys, паролі, токени. Якщо щось таке є в контексті — заміни на `<REDACTED>`.
+Before writing, verify that NO credentials, API keys, passwords, or tokens end up in the snapshot or logs. If anything like that is in context — replace it with `<REDACTED>`.
 
-## 6. Фінальне повідомлення
+## 6. Final message
 
-Покажи користувачу:
-- шляхи до всіх створених/оновлених файлів
-- незакомічені git-зміни (якщо є)
-- нагадування: **щоб звільнити контекст — виконай `/clear` (або закрий сесію), а в новій сесії — `/start`**
+Show the user:
+- paths to all created/updated files
+- uncommitted git changes (if any)
+- a reminder: **to free the context — run `/clear` (or close the session), then `/start` in the new session**
